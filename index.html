@@ -1,0 +1,151 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState } from 'react';
+import { Header } from './components/Header.tsx';
+import { Hero } from './components/Hero.tsx';
+import { QuickContactBanner } from './components/QuickContactBanner.tsx';
+import { ServicesSection } from './components/ServicesSection.tsx';
+import { EstimateCalculator } from './components/EstimateCalculator.tsx';
+import { BeforeAfterSlider } from './components/BeforeAfterSlider.tsx';
+import { TrustSection } from './components/TrustSection.tsx';
+import { ReviewsSection } from './components/ReviewsSection.tsx';
+import { QuoteModal } from './components/QuoteModal.tsx';
+import { Footer } from './components/Footer.tsx';
+import { Phone, MessageSquare, ArrowRight, DollarSign } from 'lucide-react';
+
+export default function App() {
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [calculatorService, setCalculatorService] = useState<string | undefined>(undefined);
+  const [modalInitialData, setModalInitialData] = useState<{
+    yardSize?: string;
+    services?: string[];
+    leafVolume?: string;
+    paymentMethod?: string;
+    estimatedRange?: string;
+  } | undefined>(undefined);
+
+  const handleOpenQuoteModal = (initialData?: typeof modalInitialData) => {
+    setModalInitialData(initialData);
+    setIsQuoteModalOpen(true);
+  };
+
+  const handleSelectServiceForEstimate = (serviceName: string) => {
+    setCalculatorService(serviceName);
+    const element = document.getElementById('estimate');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleProceedToBooking = (estimateData: {
+    yardSize: string;
+    services: string[];
+    leafVolume: string;
+    paymentMethod: string;
+    estimatedRange: string;
+  }) => {
+    handleOpenQuoteModal(estimateData);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-neutral-950 text-neutral-100 selection:bg-orange-500 selection:text-neutral-950">
+      {/* 3-Zone Top Bar Navigation */}
+      <Header onOpenQuoteModal={() => handleOpenQuoteModal()} />
+
+      <main className="flex-1">
+        {/* Clean, high-impact Hero Section in Clearwater, Huntsville, Alabama */}
+        <Hero onOpenQuoteModal={handleOpenQuoteModal} />
+
+        {/* Quick Contact & In-Person Payment Ribbon */}
+        <QuickContactBanner onOpenQuoteModal={() => handleOpenQuoteModal()} />
+
+        {/* Core Services Section: The Spooky Deal! ($30–$50) FIRST, Leaf Clean Up! ($20–$35), Limb/Stick Clean Up! ($10–$20) */}
+        <ServicesSection
+          onSelectServiceForEstimate={handleSelectServiceForEstimate}
+          onOpenQuoteModal={handleOpenQuoteModal}
+        />
+
+        {/* Interactive Instant Price Selector */}
+        <EstimateCalculator
+          key={calculatorService}
+          initialService={calculatorService}
+          onProceedToBooking={handleProceedToBooking}
+        />
+
+        {/* Halloween & Fall Leaf Before & After Transformation Slider */}
+        <BeforeAfterSlider />
+
+        {/* Trust & In-Person Payment Commitments */}
+        <TrustSection />
+
+        {/* Interactive Visitor Reviews & Ratings */}
+        <ReviewsSection />
+
+        {/* Call-to-Action Closing Strip with (618) 697-5095 */}
+        <section className="py-16 bg-gradient-to-r from-stone-900 via-amber-950 to-stone-900 text-white border-t border-amber-900/60">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-400">
+              <DollarSign className="w-4 h-4 text-amber-400" />
+              <span>Serving Clearwater, Huntsville, Alabama · Pay In Person</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              Ready for The Spooky Deal! ($30–$50) in Clearwater, Huntsville?
+            </h2>
+            <p className="text-base text-amber-200/90 max-w-2xl mx-auto leading-relaxed">
+              Call or text Connor directly at <strong className="text-white font-bold">(618) 697-5095</strong>. 
+              Get your limb/stick clean up! ($10–$20), leaf clean up! ($20–$35), or grab The Spooky Deal! ($30–$50) today!
+            </p>
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a
+                href="tel:6186975095"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-amber-400 text-neutral-950 font-bold text-sm hover:bg-amber-300 transition-colors shadow-md"
+              >
+                <Phone className="w-4 h-4" />
+                <span>Call (618) 697-5095</span>
+              </a>
+              <button
+                onClick={() => handleOpenQuoteModal()}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-amber-200 font-semibold text-sm border border-amber-700/60 transition-colors cursor-pointer"
+              >
+                <span>Book Cleanup Online</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <Footer onOpenQuoteModal={() => handleOpenQuoteModal()} />
+
+      {/* Mobile Sticky Quick Action Bar */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-neutral-950/95 backdrop-blur-md border-t border-neutral-800 px-3 py-2 flex items-center justify-between gap-2 shadow-2xl">
+        <a
+          href="tel:6186975095"
+          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 bg-amber-400 text-neutral-950 font-bold text-xs rounded-lg shadow-sm"
+        >
+          <Phone className="w-3.5 h-3.5" />
+          <span>Call (618) 697-5095</span>
+        </a>
+        <a
+          href="sms:6186975095?body=Hi%20Connor,%20I'd%20like%20to%20book%20a%20yard%20cleanup%20in%20Clearwater%20Huntsville"
+          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 bg-neutral-900 text-amber-200 font-semibold text-xs rounded-lg border border-neutral-700"
+        >
+          <MessageSquare className="w-3.5 h-3.5 text-orange-400" />
+          <span>Text Connor</span>
+        </a>
+      </div>
+
+      {/* Interactive Booking / Quote Modal */}
+      <QuoteModal
+        isOpen={isQuoteModalOpen}
+        onClose={() => setIsQuoteModalOpen(false)}
+        initialData={modalInitialData}
+      />
+    </div>
+  );
+}
